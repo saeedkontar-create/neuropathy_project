@@ -12,6 +12,31 @@ output_dir = "plots"
 os.makedirs(output_dir, exist_ok=True)
 
 # =========================
+# 0) TOTAL NUMBER OF STEPS PER GROUP
+# =========================
+steps_per_group = df.groupby("label").size().reset_index(name="num_steps")
+
+plt.figure(figsize=(8,5))
+bars = plt.bar(steps_per_group["label"], steps_per_group["num_steps"])
+
+for bar in bars:
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width() / 2,
+        height,
+        str(int(height)),
+        ha="center",
+        va="bottom"
+    )
+
+plt.title("Number of Steps per Group")
+plt.xlabel("Group")
+plt.ylabel("Number of Steps")
+plt.tight_layout()
+plt.savefig(f"{output_dir}/steps_per_group.png")
+plt.close()
+
+# =========================
 # 1) NUMBER OF STEPS PER PATIENT
 # =========================
 steps_per_patient = df.groupby(["label", "patient_id"]).size().reset_index(name="num_steps")
